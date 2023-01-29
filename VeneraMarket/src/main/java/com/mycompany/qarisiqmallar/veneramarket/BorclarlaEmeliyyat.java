@@ -2083,6 +2083,10 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
         finalDebtAfterPayment = Double.parseDouble(txtUmumiBorc.getText());
         if (txtUmumiBorc.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Xana bosdur");
+            
+            
+            
+            
         }
         double roundedFinalDebt = Math.round(finalDebtAfterPayment * 100.000) / 100.000;
         double result = firstCommonDebt - finalDebtAfterPayment;
