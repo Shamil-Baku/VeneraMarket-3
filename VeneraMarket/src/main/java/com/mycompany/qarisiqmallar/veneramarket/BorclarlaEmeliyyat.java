@@ -2093,6 +2093,8 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
 
         } catch (Exception ex) {
 
+            
+            
             JOptionPane.showMessageDialog(this, "Müştərinin borcu tam ödənilmişdir.\n Qəbz üçün Ok - düyməsini sıxın");
         }
 
