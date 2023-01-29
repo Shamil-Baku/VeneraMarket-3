@@ -161,7 +161,7 @@ public class IdentificationOfProduuctBarcodes extends javax.swing.JFrame {
         });
         jPopupMenu1.add(jMenuItem1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jButton1.setText("Start");
         jButton1.addActionListener(new java.awt.event.ActionListener() {

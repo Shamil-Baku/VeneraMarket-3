@@ -143,7 +143,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
         });
         jPopupMenu1.add(changeNameOfClient);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(255, 51, 204));
 
@@ -706,8 +706,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
 
     public void clearBarcodeText() {
 
-       // Main.txtBarcode_reader.setText("");
-
+        // Main.txtBarcode_reader.setText("");
     }
 
     public void borcGostericileri() {
@@ -876,7 +875,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                         pres.setDouble(4, Miqdari2);
                         pres.setDouble(5, qiymeti);
                         pres.setDouble(6, umumimebleg);
-                        pres.setString(7, SatisTarixi);
+                        pres.setString(7, time2);
                         pres.setString(8, borcAlaninAdi);
                         pres.setString(9, "Borcdan gələn");
                         pres.setDouble(10, qismenOdenis);
@@ -1513,13 +1512,14 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                     int borcID = rs.getInt("id");
                     double qismen = rs.getDouble("Qismen_odenis");
                     double qaliq = rs.getDouble("Qaliq_borc");
+                    double roundedQaliq = Math.round(qaliq *100.000)/100.000;
                     String date = txtOdenisTarixi.getText();
 
                     pres = con.prepareStatement("update borclar_siyahisi set Qismen_odenis = Qismen_odenis + ?, Qaliq_borc=?, Borc_odeme_tarixi=?  where id = ?");
 
-                    pres.setDouble(1, qaliq);
+                    pres.setDouble(1, roundedQaliq);
                     pres.setDouble(2, 0.0);
-                    pres.setString(3, date);
+                    pres.setString(3, time2);
                     pres.setInt(4, borcID);
                     pres.executeUpdate();
 
@@ -1530,7 +1530,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
 
                     double capitalBudget = rs.getDouble("AmountOfCapitalBudget");
 
-                    double result = capitalBudget + qaliq;
+                    double result = capitalBudget + roundedQaliq;
                     double roundedResult = Math.round(result * 100.000) / 100.000;
 
                     pres = con.prepareStatement("insert into updatedCapitalbudget (AmountOfCapitalBudget, date, `from`, `status`, processedValue) values(?,?,?,?,?)");
@@ -1538,7 +1538,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                     pres.setString(2, time2);
                     pres.setString(3, "Kassa " + cashierName + "- terefinden borcdan gelen gelirle artirildi");
                     pres.setString(4, "+");
-                    pres.setDouble(5, roundedResult);
+                    pres.setDouble(5, roundedQaliq);
                     pres.executeUpdate();
 
                 }
@@ -1574,9 +1574,9 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                         double Qiymeti = Double.parseDouble(txtQiymeti.getText());
                         double UmumiMebleg = Double.parseDouble(txtUmumiMebleg.getText());
                         double QismenOdenis = Double.parseDouble(txtQismenOdenis.getText());
-                        double roundedQismenOdenis = Math.round(QismenOdenis * 100.000)/100.000;
+                        double roundedQismenOdenis = Math.round(QismenOdenis * 100.000) / 100.000;
                         double QaliqBorc = Double.parseDouble(txtQaliqBorc.getText());
-                        double roundedQaliqBorc = Math.round(QaliqBorc * 100.000)/100.000;
+                        double roundedQaliqBorc = Math.round(QaliqBorc * 100.000) / 100.000;
                         String odenisTarixi = txtOdenisTarixi.getText();
 
                         pres = con.prepareStatement("update borclar_siyahisi set  Umumi_mebleg=?, Qismen_odenis = Qismen_odenis + ?, Qaliq_borc=?, Borc_odeme_tarixi=?  where id = ?");
@@ -1584,7 +1584,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                         pres.setDouble(1, UmumiMebleg);
                         pres.setDouble(2, roundedQismenOdenis);
                         pres.setDouble(3, roundedQaliqBorc);
-                        pres.setString(4, odenisTarixi);
+                        pres.setString(4, time2);
                         pres.setInt(5, IDBorc);
                         pres.executeUpdate();
 
@@ -1594,7 +1594,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                         rs.next();
                         double capitalBudget = rs.getDouble("AmountOfCapitalBudget");
 
-                        double result = capitalBudget + QismenOdenis;
+                        double result = capitalBudget + roundedQismenOdenis;
                         double roundedResult = Math.round(result * 100.000) / 100.000;
 
                         pres = con.prepareStatement("insert into updatedCapitalbudget (AmountOfCapitalBudget, date, `from`, `status`, processedValue) values(?,?,?,?,?)");
@@ -1602,7 +1602,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                         pres.setString(2, time2);
                         pres.setString(3, "Kassa " + cashierName + "- terefinden borcdan gelen gelirle artirildi");
                         pres.setString(4, "+");
-                        pres.setDouble(5, roundedResult);
+                        pres.setDouble(5, roundedQismenOdenis);
                         pres.executeUpdate();
 
                         load();
@@ -1677,12 +1677,12 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
                     v2.add(rs.getInt("id"));
                     v2.add(rs.getDouble("Miqdari"));
                     v2.add(rs.getDouble("Qiymeti"));
-                    v2.add(rs.getDouble("Umumi_mebleg"));                    
+                    v2.add(rs.getDouble("Umumi_mebleg"));
                     double qismenOdenis = rs.getDouble("Qismen_odenis");
-                    double roundedQismenOdenis = Math.round(qismenOdenis * 100.000)/100.000;
+                    double roundedQismenOdenis = Math.round(qismenOdenis * 100.000) / 100.000;
                     v2.add(roundedQismenOdenis);
                     double qaliqBorc = rs.getDouble("Qaliq_borc");
-                    double roundedQaliqBorc = Math.round(qaliqBorc * 100.000)/100.000;
+                    double roundedQaliqBorc = Math.round(qaliqBorc * 100.000) / 100.000;
                     v2.add(roundedQaliqBorc);
                     v2.add(rs.getString("Borc_alma_tarixi"));
                     v2.add(rs.getString("Borc_odeme_tarixi"));
@@ -2079,11 +2079,23 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
         String currencyFirstdebt;
         String currencyResult;
         String currencyAfterPayment;
+        try {
 
-        finalDebtAfterPayment = Double.parseDouble(txtUmumiBorc.getText());
-        if (txtUmumiBorc.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Xana bosdur");
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
         }
+
+        try {
+
+            finalDebtAfterPayment = Double.parseDouble(txtUmumiBorc.getText());
+            finalDebtAfterPayment = 00.00;
+
+        } catch (Exception ex) {
+
+            JOptionPane.showMessageDialog(this, "Müştərinin borcu tam ödənilmişdir.\n Qəbz üçün Ok - düyməsini sıxın");
+        }
+
         double roundedFinalDebt = Math.round(finalDebtAfterPayment * 100.000) / 100.000;
         double result = firstCommonDebt - finalDebtAfterPayment;
         double roundedResult = Math.round(result * 100.000) / 100.000;
@@ -2187,7 +2199,7 @@ public class BorclarlaEmeliyyat extends javax.swing.JFrame implements WindowList
     }//GEN-LAST:event_changeNameOfClientActionPerformed
 
     private void optionForCashierMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionForCashierMouseClicked
-        
+
         txtOdenis.requestFocus();
     }//GEN-LAST:event_optionForCashierMouseClicked
 
