@@ -5,11 +5,13 @@
 package com.mycompany.qarisiqmallar.veneramarket;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -253,7 +255,7 @@ public class TestClass {
         String barcode = null;
         String newBarcode;
         String barcode2 = null;
-        
+
         try {
             con = connect();
             pres = con.prepareStatement("select s.Barcode, s.id from mehsullar s");
@@ -273,15 +275,52 @@ public class TestClass {
                     }
                 }
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return barcodeInput;
     }
 
+    public static void createNewDate() {
+
+        try {
+
+            con = connect();
+            pres = con.prepareStatement("select * from mehsullar");
+            rs = pres.executeQuery();
+            
+            while (rs.next()) {                
+                
+                Date ss = rs.getDate("Alis_Tarixi");
+                int id = rs.getInt("id");
+                
+                if (ss == null) {
+                    
+                    pres = con.prepareStatement("update mehsullar set Alis_Tarixi = ? where id = "+id);
+                    pres.setString(1, "2023-01-30");
+                    pres.executeUpdate();
+                    System.out.println("Tarix yenilendi "+id);
+                    
+                }
+                
+                
+            }
+            
+            
+            
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+            
+        }
+
+    }
+
     public static void main(String[] args) {
 
+        
+        createNewDate();
         //doCoppySecondSubCategory();
         //doCoppySubCategory();
         //doCoppyMainCategory();
